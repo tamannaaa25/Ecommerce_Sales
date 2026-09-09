@@ -5,7 +5,7 @@ A complete data analytics project analyzing transactional e-commerce sales acros
 This project covers the four core stages of a real analytics workflow:
 1. **Excel** — Data cleaning (fixing negative & blank quantities, standardizing text casing), validation, and Pivot Tables.
 2. **SQL** — Joining tables, aggregations, CTEs, and window functions (`LAG`, `DENSE_RANK`).
-3. **Power BI** — Star Schema data modeling, DAX measures, and interactive dashboards.
+3. **Tableau** — Logical layer data modeling, Level of Detail (LOD) expressions, and interactive dashboards.
 4. **Business Analysis** — Finding actionable insights (customer spend concentration, category reliance, payment tracking).
 
 ---
@@ -23,20 +23,20 @@ This project covers the four core stages of a real analytics workflow:
 
 ---
 
-## 🏗️ Data Model (Star Schema)
+## 🏗️ Data Model
 
-The dataset is organized into a central Fact table connected to four Dimension tables with 1-to-many relationships:
+The dataset is organized into a central Fact table connected to four Dimension tables using relational keys:
 
 ```mermaid
 erDiagram
-    DIM_CUSTOMERS ||--o{ FACT_SALES : "customer_id"
+    DIM_CUSTOMERS ||--o{ FACT_SALES : "customer"
     DIM_PRODUCTS ||--o{ FACT_SALES : "product"
     DIM_REGIONS ||--o{ FACT_SALES : "region"
     DIM_DATES ||--o{ FACT_SALES : "order_date"
 
     FACT_SALES {
         string order_id PK
-        string customer_id FK
+        string customer FK
         date order_date FK
         string product FK
         string category
@@ -45,6 +45,7 @@ erDiagram
         decimal unit_price
         decimal discount
         decimal revenue
+        string payment_status
     }
 ```
 
@@ -56,9 +57,9 @@ erDiagram
 Customer_Analytics/
 ├── data/
 │   ├── raw/
-│   │   └── raw_ecommerce_sales.csv        # Raw dataset with duplicates, blanks, and mixed dates
+│   │   └── raw_ecommerce_sales.csv        # Raw 50-order dataset with audit anomalies
 │   ├── processed/
-│   │   ├── cleaned_ecommerce_sales.csv    # Cleaned dataset (10,441 rows)
+│   │   ├── cleaned_ecommerce_sales.csv    # Cleaned dataset (48 orders)
 │   │   ├── fact_sales.csv                 # Fact table
 │   │   ├── dim_customers.csv              # Customer dimension table
 │   │   ├── dim_products.csv               # Product dimension table
@@ -75,10 +76,10 @@ Customer_Analytics/
 │   ├── 04_customer_segmentation_rfm.sql   # Repeat buyers and customer tiers
 │   ├── 05_product_performance.sql         # Best sellers and category breakdown
 │   └── 06_regional_analysis.sql           # Sales and AOV by region
-├── power_bi/
-│   ├── data_model_star_schema.md          # Power BI model documentation
-│   ├── dax_measures.md                    # Core DAX measures (Total Revenue, Orders, AOV, MoM%)
-│   └── dashboard_layout_spec.md           # Dashboard wireframe and visual layout
+├── tableau/
+│   ├── calculated_fields_and_lod.md       # Core Tableau formulas and LOD expressions ({FIXED})
+│   ├── data_model_and_relationships.md    # Tableau logical layer relationships
+│   └── dashboard_layout_spec.md           # Dashboard wireframe, BAN scorecards, and actions
 ├── web_dashboard/                         # Live interactive dashboard (Chart.js)
 │   ├── index.html                         # Dashboard page
 │   ├── styles.css                         # Clean modern styles
@@ -135,34 +136,38 @@ SELECT
 FROM monthly_sales;
 ```
 
-### 2. Finding Loyal Repeat Customers (using `HAVING`)
+### 2. Finding High-Value VIP Customers (using `HAVING`)
 ```sql
 SELECT 
-    customer_id,
-    COUNT(DISTINCT order_id) AS order_count,
+    customer,
+    COUNT(order_id) AS order_count,
     ROUND(SUM(revenue), 2) AS total_spent,
-    ROUND(SUM(revenue) / COUNT(DISTINCT order_id), 2) AS avg_order_value
+    ROUND(AVG(revenue), 2) AS avg_order_value
 FROM fact_sales
-GROUP BY customer_id
-HAVING COUNT(DISTINCT order_id) >= 15 AND SUM(revenue) > 3000
+GROUP BY customer
+HAVING SUM(revenue) >= 100000
 ORDER BY total_spent DESC;
 ```
 
 ---
 
-## 📊 Core Power BI DAX Measures
+## 📊 Core Tableau Calculated Fields & LOD Expressions
 
-```dax
-Total Revenue = SUM(fact_sales[revenue])
+```tableau
+// Total Revenue (BAN)
+SUM([Revenue])
 
-Total Orders = DISTINCTCOUNT(fact_sales[order_id])
+// Total Orders
+COUNTD([Order ID])
 
-Average Order Value = DIVIDE([Total Revenue], [Total Orders], 0)
+// Average Order Value (AOV)
+SUM([Revenue]) / COUNTD([Order ID])
 
-MoM Growth % = 
-VAR PriorRevenue = CALCULATE([Total Revenue], DATEADD(dim_dates[date_key], -1, MONTH))
-RETURN
-DIVIDE([Total Revenue] - PriorRevenue, PriorRevenue, 0)
+// Customer Lifetime Spend (LOD: FIXED)
+{ FIXED [Customer] : SUM([Revenue]) }
+
+// Month-over-Month (MoM) Growth % (Table Calculation)
+(ZN(SUM([Revenue])) - LOOKUP(ZN(SUM([Revenue])), -1)) / ABS(LOOKUP(ZN(SUM([Revenue])), -1))
 ```
 
 ---

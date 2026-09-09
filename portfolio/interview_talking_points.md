@@ -12,7 +12,7 @@ When an interviewer asks: **"Tell me about a project you've worked on recently."
 > 
 > The raw data had typical real-world quality issues—a negative quantity on an order, a blank quantity field, and inconsistent text casing like lowercase `'north'` and `'paid'`. I started in **Excel** to clean it up, handle the missing and invalid values, and run some quick Pivot Tables. Once clean, I loaded it into a **SQL** database where I wrote queries using JOINs, CTEs, and window functions like `LAG` and `DENSE_RANK` to analyze monthly trends, repeat customer spend, and product rankings. 
 > 
-> Finally, I built an interactive **Power BI** dashboard with custom DAX measures to track KPIs like revenue, orders, and average order value. The key takeaway was finding that Electronics accounted for over 80% of our business, driven heavily by high-ticket items like Laptops and Phones, with our top customer Aarav generating over ₹5.3 Lakhs alone."
+> Finally, I built an interactive **Tableau** dashboard with custom calculated fields and Level of Detail (LOD) expressions to track KPIs like revenue, orders, and average order value. The key takeaway was finding that Electronics accounted for over 80% of our business, driven heavily by high-ticket items like Laptops and Phones, with our top customer Aarav generating over ₹5.3 Lakhs alone."
 
 ---
 
@@ -54,19 +54,22 @@ When an interviewer asks: **"Tell me about a project you've worked on recently."
 
 ---
 
-## 4. Step 3: Power BI (Dashboard & Measures)
+## 4. Step 3: Tableau (Dashboard & Calculated Fields)
 
-### Interviewer: "How did you set up the Power BI dashboard?"
+### Interviewer: "How did you set up the Tableau dashboard?"
 
-> "I organized the model into a clean Star Schema:
+> "I organized the data and dashboard using modern Tableau best practices:
 > 
-> - **Star Schema**: One central `fact_sales` table linked to dimension tables for Customers, Products, Regions, and Dates using 1-to-many relationships.
-> - **DAX Measures**:
->   - `Total Revenue = SUM(fact_sales[revenue])` (₹14,38,655)
->   - `Total Orders = DISTINCTCOUNT(fact_sales[order_id])` (48 orders)
->   - `Average Order Value = DIVIDE([Total Revenue], [Total Orders], 0)` (₹29,972)
->   - `Repeat Rate = 100%` (All 8 customers are repeat buyers)
-> - **Dashboard Visuals**: Top KPI cards, a monthly revenue bar/line chart, a category share donut chart, a regional sales breakdown, and a top customer leaderboard. Added slicers for Month (Jan 2026 / Feb 2026), Region, and Category."
+> - **Data Modeling**: Connected `fact_sales` to dimension tables (Customers, Products, Regions, Dates) using Tableau's logical layer relationships ('noodles') on key fields, preventing row duplication while preserving native granularity.
+> - **Calculated Fields**:
+>   - `Total Revenue`: `SUM([Revenue])` (₹14,38,655)
+>   - `Total Orders`: `COUNTD([Order ID])` (48 orders)
+>   - `Average Order Value (AOV)`: `[Total Revenue] / [Total Orders]` (₹29,972)
+> - **Level of Detail (LOD) Expressions**:
+>   - Used `{ FIXED [Customer] : SUM([Revenue]) }` to calculate lifetime spend per customer, allowing me to group them into Platinum VIP (₹3L+) and Gold tiers independent of any month/category filter selections.
+> - **Table Calculations**:
+>   - Computed Month-over-Month growth % using `(ZN(SUM([Revenue])) - LOOKUP(ZN(SUM([Revenue])), -1)) / ABS(LOOKUP(ZN(SUM([Revenue])), -1))`.
+> - **Dashboard Visuals & Interactivity**: Built top BAN KPI cards, a dual-axis monthly sales & order volume chart, category share breakdown, and an interactive customer matrix. Added filter actions so clicking any region or category dynamically cross-filters the entire dashboard."
 
 ---
 

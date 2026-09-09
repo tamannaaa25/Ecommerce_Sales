@@ -6,7 +6,7 @@ Use these clean, direct bullet points on your resume or LinkedIn profile. They m
 
 ## Project Title for Resume
 
-**E-Commerce Sales & Customer Analytics (Excel, SQL, Power BI)**
+**E-Commerce Sales & Customer Analytics (Excel, SQL, Tableau)**
 *Analyzed e-commerce transactional sales data (~₹14.4 Lakhs in revenue) across 4 regions and 3 categories to evaluate revenue trends, customer lifetime spend, and product performance.*
 
 ---
@@ -17,7 +17,7 @@ Use these clean, direct bullet points on your resume or LinkedIn profile. They m
 - **Used Excel Pivot Tables for initial exploratory data analysis**, identifying that Electronics generated 80.6% of total revenue (₹11.6 Lakhs) with an Average Order Value of ₹55,500.
 - **Authored analytical SQL queries using CTEs, JOINs, and window functions (`LAG`, `DENSE_RANK`, `SUM() OVER`)** to calculate month-over-month growth, track running revenue totals, and rank products within each category.
 - **Analyzed customer lifetime spend in SQL**, discovering that the top 3 repeat customers (Aarav, Isha, Sanya) drove 78% of company revenue (₹11.2 Lakhs), led by Aarav generating ₹5.39 Lakhs alone.
-- **Built an interactive Power BI dashboard** with a Star Schema data model and custom DAX measures (`Total Revenue`, `Total Orders`, `AOV`, `Repeat Rate`), configuring slicers for month, sales region, and product category.
+- **Developed an interactive Tableau dashboard** leveraging Level of Detail (LOD) expressions (`{FIXED [Customer] : SUM([Revenue])}`), table calculations (MoM growth), and interactive filter actions to visualize KPIs (Total Sales, Orders, AOV, Repeat Rate) across regions and product categories.
 - **Delivered actionable business insights**, identifying that the North region led sales (₹6.23 Lakhs, 43.3% share) due to high-ticket Laptop purchases, and flagged over ₹50,000 in uncollected revenue across pending and failed transactions.
 
 ---
@@ -26,5 +26,5 @@ Use these clean, direct bullet points on your resume or LinkedIn profile. They m
 
 - **Excel**: Data Cleaning, Handle Blanks & Outliers, Data Validation, Pivot Tables, XLOOKUP, SUMIFS, COUNTIFS, IF/IFERROR
 - **SQL**: INNER/LEFT JOIN, GROUP BY, HAVING, CASE WHEN, CTEs, Subqueries, Window Functions (`LAG`, `DENSE_RANK`, `SUM() OVER`)
-- **Power BI**: Star Schema Data Modeling, DAX Measures, Slicers, KPI Cards, Interactive Visuals
+- **Tableau**: Level of Detail (LOD) Expressions (FIXED, EXCLUDE), Calculated Fields, Table Calculations, Interactive Actions, Dual-Axis Charts, BANs
 - **Analysis**: Revenue Trends, Customer Repeat Analysis, Average Order Value (AOV), Category Performance, Payment Tracking

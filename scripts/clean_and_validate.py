@@ -343,7 +343,7 @@ audit_rows = [
     ("Discount Normalization", "10%, 5%, 0% etc.", "Converted percentage strings into decimals (0.10, 0.05)"),
     ("Date Normalization", "02-Jan-26", "Converted DD-Mon-YY into standard ISO YYYY-MM-DD"),
     ("Revenue Calculation", "Formula Applied", "Revenue = Quantity * Unit_Price * (1 - Discount)"),
-    ("Final Cleaned Records", f"{len(df_clean)} Orders", "Validated clean dataset ready for SQL & Power BI")
+    ("Final Cleaned Records", f"{len(df_clean)} Orders", "Validated clean dataset ready for SQL & Tableau")
 ]
 
 ws_raw["A3"] = "Audit Checkpoint"
