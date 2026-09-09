@@ -1,0 +1,9 @@
+Customer,Region,Total_Orders,Total_Units,Total_Revenue,AOV,Customer_Type
+Aarav,North,6,11,539000,89833,Repeat Buyer
+Isha,South,6,13,333200,55533,Repeat Buyer
+Sanya,East,6,13,249700,41617,Repeat Buyer
+Kabir,North,6,11,83725,13954,Repeat Buyer
+Rohan,West,6,23,69920,11653,Repeat Buyer
+Diya,South,7,17,67410,9630,Repeat Buyer
+Arjun,West,6,19,58450,9742,Repeat Buyer
+Meera,East,5,16,37250,7450,Repeat Buyer

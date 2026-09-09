@@ -1,0 +1,12 @@
+{
+  "Initial Records": 10650,
+  "Duplicates Found & Removed": 132,
+  "Missing Customer IDs Dropped": 35,
+  "Missing Regions Imputed": 25,
+  "Missing Discounts Imputed (to 0.0)": 44,
+  "Invalid Quantities Filtered (<=0)": 20,
+  "Invalid Unit Prices Filtered (<=0)": 15,
+  "Date Formats Standardized": 198,
+  "Text Fields Cleaned & Standardized": 53250,
+  "Final Clean Records": 10448
+}

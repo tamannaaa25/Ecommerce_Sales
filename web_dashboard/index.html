@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Commerce Sales Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="dashboard-container">
+    
+    <!-- Header -->
+    <header class="header-bar">
+      <div class="brand-section">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>E-Commerce Sales Dashboard</h1>
+          <p>Sales, orders, and customer breakdown • Jan 02 to Feb 21, 2026</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <span class="date-badge">48 Orders • INR (₹)</span>
+      </div>
+    </header>
+
+    <!-- Filters -->
+    <section class="filter-bar" id="globalFilters">
+      <div class="filter-group">
+        <span class="filter-label">Month:</span>
+        <div class="pill-group" id="yearFilter">
+          <button class="pill-btn active" data-value="ALL" id="btn-month-all">All Months</button>
+          <button class="pill-btn" data-value="2026-01" id="btn-month-jan">Jan 2026</button>
+          <button class="pill-btn" data-value="2026-02" id="btn-month-feb">Feb 2026</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Region:</span>
+        <div class="select-wrapper">
+          <select id="regionSelect">
+            <option value="ALL">All Regions</option>
+            <option value="North">North (Aarav, Kabir)</option>
+            <option value="South">South (Isha, Diya)</option>
+            <option value="East">East (Sanya, Meera)</option>
+            <option value="West">West (Rohan, Arjun)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Category:</span>
+        <div class="select-wrapper">
+          <select id="categorySelect">
+            <option value="ALL">All Categories</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Furniture">Furniture</option>
+            <option value="Clothing">Clothing</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button class="btn-secondary" id="resetFiltersBtn">Reset Filters</button>
+      </div>
+    </section>
+
+    <!-- KPI Cards -->
+    <section class="kpi-grid">
+      <!-- Total Revenue -->
+      <div class="kpi-card" id="card-revenue">
+        <div class="kpi-header">
+          <span class="kpi-title">Total Sales</span>
+        </div>
+        <div class="kpi-value" id="kpi-revenue">₹0</div>
+        <div class="kpi-subtext">Net revenue across orders</div>
+      </div>
+
+      <!-- Total Orders -->
+      <div class="kpi-card" id="card-orders">
+        <div class="kpi-header">
+          <span class="kpi-title">Orders</span>
+        </div>
+        <div class="kpi-value" id="kpi-orders">0</div>
+        <div class="kpi-subtext">Completed transactions</div>
+      </div>
+
+      <!-- Average Order Value -->
+      <div class="kpi-card" id="card-aov">
+        <div class="kpi-header">
+          <span class="kpi-title">Average Order (AOV)</span>
+        </div>
+        <div class="kpi-value" id="kpi-aov">₹0</div>
+        <div class="kpi-subtext">Revenue per order</div>
+      </div>
+
+      <!-- Units Sold -->
+      <div class="kpi-card" id="card-units">
+        <div class="kpi-header">
+          <span class="kpi-title">Units Sold</span>
+        </div>
+        <div class="kpi-value" id="kpi-units">0</div>
+        <div class="kpi-subtext">Total items purchased</div>
+      </div>
+
+      <!-- Repeat Customers -->
+      <div class="kpi-card" id="card-repeat">
+        <div class="kpi-header">
+          <span class="kpi-title">Customers</span>
+        </div>
+        <div class="kpi-value" id="kpi-repeat-rate">8</div>
+        <div class="kpi-subtext"><strong>100%</strong> repeat buyer rate</div>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <nav class="view-tabs">
+      <button class="tab-btn active" data-target="tab-overview" id="tab-btn-overview">Overview</button>
+      <button class="tab-btn" data-target="tab-customers" id="tab-btn-customers">Customers</button>
+      <button class="tab-btn" data-target="tab-products" id="tab-btn-products">Products & Regions</button>
+    </nav>
+
+    <!-- TAB 1: Overview -->
+    <div class="tab-content active" id="tab-overview">
+      <div class="charts-grid-main">
+        <!-- Monthly Revenue -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h2 class="chart-title">Monthly Revenue & Orders</h2>
+            <p class="chart-subtitle">Sales volume across January and February 2026</p>
+          </div>
+          <div class="chart-container">
+            <canvas id="monthlyTrendCanvas"></canvas>
+          </div>
+        </div>
+
+        <!-- Category Share -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h2 class="chart-title">Sales by Category</h2>
+            <p class="chart-subtitle">Share of revenue by department</p>
+          </div>
+          <div class="chart-container">
+            <canvas id="categoryShareCanvas"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Best Selling Products -->
+      <div class="table-card">
+        <div class="chart-card-header">
+          <h2 class="chart-title">Products Ranked by Sales</h2>
+          <p class="chart-subtitle">8 products ordered across Electronics, Furniture, and Clothing</p>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Units Sold</th>
+                <th>Price</th>
+                <th>Total Sales</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <!-- Dynamic -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Customers -->
+    <div class="tab-content" id="tab-customers">
+      <div class="table-card">
+        <div class="chart-card-header">
+          <h2 class="chart-title">Customer Spending Summary</h2>
+          <p class="chart-subtitle">Total purchases and order history for all 8 customers</p>
+        </div>
+
+        <!-- Quick Summary Cards -->
+        <div class="customer-tier-grid" id="rfmCardsContainer">
+          <!-- Dynamic -->
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Region</th>
+                <th>Orders</th>
+                <th>Units</th>
+                <th>Avg Order (AOV)</th>
+                <th>Total Spend</th>
+                <th>Customer Group</th>
+              </tr>
+            </thead>
+            <tbody id="customersTableBody">
+              <!-- Dynamic -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Products & Regions -->
+    <div class="tab-content" id="tab-products">
+      <div class="charts-grid-secondary">
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h2 class="chart-title">Regional Sales Comparison</h2>
+            <p class="chart-subtitle">Sales by territory (North, South, East, West)</p>
+          </div>
+          <div class="chart-container">
+            <canvas id="regionalBarCanvas"></canvas>
+          </div>
+        </div>
+
+        <div class="table-card" style="margin-bottom: 0;">
+          <div class="chart-card-header">
+            <h2 class="chart-title">Regional Performance Summary</h2>
+            <p class="chart-subtitle">Total sales and top category per region</p>
+          </div>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Region</th>
+                  <th>Orders</th>
+                  <th>Top Product</th>
+                  <th>Total Sales</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="customer-name">North</td>
+                  <td>12 orders</td>
+                  <td>Laptop (₹5.39L)</td>
+                  <td class="revenue-text">₹6,22,725</td>
+                </tr>
+                <tr>
+                  <td class="customer-name">South</td>
+                  <td>13 orders</td>
+                  <td>Phone (₹3.33L)</td>
+                  <td class="revenue-text">₹4,00,610</td>
+                </tr>
+                <tr>
+                  <td class="customer-name">East</td>
+                  <td>11 orders</td>
+                  <td>Tablet (₹2.50L)</td>
+                  <td class="revenue-text">₹2,86,950</td>
+                </tr>
+                <tr>
+                  <td class="customer-name">West</td>
+                  <td>12 orders</td>
+                  <td>Chair (₹69.9K)</td>
+                  <td class="revenue-text">₹1,28,370</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
